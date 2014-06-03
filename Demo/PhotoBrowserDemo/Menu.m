@@ -6,6 +6,9 @@
 //  Copyright 2010 d3i. All rights reserved.
 //
 
+#import <SDWebImage/UIButton+WebCache.h>
+#import <SDWebImage/UIImageView+WebCache.h>
+#import <KIImagePager.h>
 #import "Menu.h"
 
 @implementation UIAlertView (UIAlertViewWithTitle)
@@ -14,6 +17,12 @@
     [[[UIAlertView alloc] initWithTitle:title message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
 }
 
+@end
+
+@interface Menu () <KIImagePagerDataSource>
+{
+    KIImagePager *imagePager;
+}
 @end
 
 @implementation Menu
@@ -86,7 +95,7 @@
 
 - (void)setupTableViewFooterView
 {
-    UIView *tableViewFooter = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 426 * 0.9 + 40)];
+    UIView *tableViewFooter = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 1100)];
 
     UIButton *buttonWithImageOnScreen1 = [UIButton buttonWithType:UIButtonTypeCustom];
     buttonWithImageOnScreen1.frame = CGRectMake(15, 0, 640/3 * 0.9, 426/2 * 0.9);
@@ -108,7 +117,54 @@
     [buttonWithImageOnScreen2 addTarget:self action:@selector(buttonWithImageOnScreenPressed:) forControlEvents:UIControlEventTouchUpInside];
     [tableViewFooter addSubview:buttonWithImageOnScreen2];
     
+    [self setupAdditionalViewToTableFooterView:tableViewFooter];
+    
     self.tableView.tableFooterView = tableViewFooter;
+}
+
+- (void)setupAdditionalViewToTableFooterView:(UIView *)tableViewFooter {
+    // Views in this method have 20x as their view tag
+    
+    CGFloat spacing = 20;
+    CGFloat yPos = 426/2 * 0.9 + 20 + 426/2 * 0.9 + spacing;
+    CGFloat imageWidth = 290;
+    CGFloat imageHeight = 145;
+    
+    // Low-res image using SDWebImage
+    UIButton *buttonWithLowResImage = [UIButton buttonWithType:UIButtonTypeCustom];
+    buttonWithLowResImage.frame = CGRectMake(15, yPos, imageWidth, imageHeight);
+    buttonWithLowResImage.tag = 201;
+    buttonWithLowResImage.adjustsImageWhenHighlighted = NO;
+    [buttonWithLowResImage setImageWithURL:[NSURL URLWithString:@"http://lorempixel.com/400/200/abstract"] forState:UIControlStateNormal];
+    [buttonWithLowResImage addTarget:self action:@selector(customButtonWithImageOnScreenPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [tableViewFooter addSubview:buttonWithLowResImage];
+    yPos += spacing + imageHeight;
+    
+    // High-res image using SDWebImage
+    UIButton *buttonWithHighResImage = [UIButton buttonWithType:UIButtonTypeCustom];
+    buttonWithHighResImage.frame = CGRectMake(15, yPos, imageWidth, imageHeight);
+    buttonWithHighResImage.tag = 202;
+    buttonWithHighResImage.adjustsImageWhenHighlighted = NO;
+    [buttonWithHighResImage setImageWithURL:[NSURL URLWithString:@"http://lorempixel.com/400/200/fashion"] forState:UIControlStateNormal];
+    [buttonWithHighResImage addTarget:self action:@selector(customButtonWithImageOnScreenPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [tableViewFooter addSubview:buttonWithHighResImage];
+    yPos += spacing + imageHeight;
+    
+    // Low-res image using SDWebImage becoming high-res when expanding
+    UIButton *buttonWithLowToHighResImage = [UIButton buttonWithType:UIButtonTypeCustom];
+    buttonWithLowToHighResImage.frame = CGRectMake(15, yPos, imageWidth, imageHeight);
+    buttonWithLowToHighResImage.tag = 203;
+    buttonWithLowToHighResImage.adjustsImageWhenHighlighted = NO;
+    [buttonWithLowToHighResImage setImageWithURL:[NSURL URLWithString:@"http://lorempixel.com/400/200/transport/1"] forState:UIControlStateNormal];
+    [buttonWithLowToHighResImage addTarget:self action:@selector(customButtonWithImageOnScreenPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [tableViewFooter addSubview:buttonWithLowToHighResImage];
+    yPos += spacing + imageHeight;
+    
+    // Image pager
+    imagePager = [[KIImagePager alloc] initWithFrame:CGRectMake(0, yPos, 320, 160)];
+    imagePager.dataSource = self;
+    imagePager.imageCounterDisabled = YES;
+    [tableViewFooter addSubview:imagePager];
 }
 
 #pragma mark - Actions
@@ -161,10 +217,14 @@
     [self presentViewController:browser animated:YES completion:nil];
 }
 
+- (void)customButtonWithImageOnScreenPressed:(id)sender {
+    
+}
+
 #pragma mark - TableView DataSource
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 3;
+    return 0;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -310,6 +370,17 @@
     
     NSString *title = [NSString stringWithFormat:@"Option %d", buttonIndex+1];
     [UIAlertView showAlertViewWithTitle:title];
+}
+
+#pragma mark - KIImagePagerDataSource
+- (NSArray *)arrayWithImages
+{
+    return @[@"http://lorempixel.com/320/180/sports/1", @"http://lorempixel.com/320/180/cats/1", @"http://lorempixel.com/320/180/people/1"];
+}
+
+- (UIViewContentMode)contentModeForImage:(NSUInteger)image
+{
+    return UIViewContentModeScaleAspectFill;
 }
 
 @end

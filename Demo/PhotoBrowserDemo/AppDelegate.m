@@ -6,6 +6,7 @@
 //  Copyright (c) 2011 __MyCompanyName__. All rights reserved.
 //
 
+#import <SDWebImage/SDImageCache.h>
 #import "AppDelegate.h"
 #import "Menu.h"
 #import "DCIntrospect.h"
@@ -16,7 +17,10 @@
 @synthesize viewController = _viewController;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
-{    
+{
+    // Set max cache age (in seconds)
+    [[SDImageCache sharedImageCache] setMaxCacheAge:20];
+    
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     
     Menu *menu = [[Menu alloc] initWithStyle:UITableViewStyleGrouped];
