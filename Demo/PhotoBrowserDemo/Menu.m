@@ -19,7 +19,7 @@
 
 @end
 
-@interface Menu () <KIImagePagerDataSource>
+@interface Menu () <KIImagePagerDataSource, KIImagePagerDelegate>
 {
     KIImagePager *imagePager;
 }
@@ -163,6 +163,7 @@
     // Image pager
     imagePager = [[KIImagePager alloc] initWithFrame:CGRectMake(0, yPos, 320, 160)];
     imagePager.dataSource = self;
+    imagePager.delegate = self;
     imagePager.imageCounterDisabled = YES;
     [tableViewFooter addSubview:imagePager];
 }
@@ -381,6 +382,11 @@
 - (UIViewContentMode)contentModeForImage:(NSUInteger)image
 {
     return UIViewContentModeScaleAspectFill;
+}
+
+#pragma mark - KIImagePagerDelegate
+-(void)imagePager:(KIImagePager *)kiImagePager didSelectImageAtIndex:(NSUInteger)index {
+    [self customButtonWithImageOnScreenPressed:[kiImagePager.scrollView.subviews objectAtIndex:index]];
 }
 
 @end
