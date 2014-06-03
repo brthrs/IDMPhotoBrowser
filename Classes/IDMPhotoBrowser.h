@@ -77,4 +77,7 @@
 // Change Sender View
 //- (void)setSenderViewForAnimation:(UIView*)senderView;
 
+/* custom properties */
+@property (nonatomic) BOOL showProgress;
+
 @end

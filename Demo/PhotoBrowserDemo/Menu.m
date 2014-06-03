@@ -224,26 +224,28 @@
         UIButton *buttonSender = (UIButton *)sender;
         
         NSArray *photoWithURL = [IDMPhoto photosWithURLs:[NSArray arrayWithObjects:[NSURL URLWithString:@"http://lorempixel.com/400/200/abstract/1"], nil]];
-        [self openPhotoBrowserFromSender:viewSender withPhotos:photoWithURL andScaleImage:buttonSender.currentImage andStartIndex:0];
+        [self openPhotoBrowserFromSender:viewSender withPhotos:photoWithURL andScaleImage:buttonSender.currentImage andStartIndex:0 shouldShowProgress:NO];
     } else if(viewSender.tag == 202) {
         UIButton *buttonSender = (UIButton *)sender;
         
         NSArray *photoWithURL = [IDMPhoto photosWithURLs:[NSArray arrayWithObjects:[NSURL URLWithString:@"http://lorempixel.com/1600/800/fashion/1"], nil]];
-        [self openPhotoBrowserFromSender:viewSender withPhotos:photoWithURL andScaleImage:buttonSender.currentImage andStartIndex:0];
+        [self openPhotoBrowserFromSender:viewSender withPhotos:photoWithURL andScaleImage:buttonSender.currentImage andStartIndex:0 shouldShowProgress:NO];
     } else if(viewSender.tag == 203) {
         UIButton *buttonSender = (UIButton *)sender;
         
         NSArray *photoWithURL = [IDMPhoto photosWithURLs:[NSArray arrayWithObjects:[NSURL URLWithString:@"http://lorempixel.com/400/200/transport/1"], nil]];
-        [self openPhotoBrowserFromSender:viewSender withPhotos:photoWithURL andScaleImage:buttonSender.currentImage andStartIndex:0];
+        [self openPhotoBrowserFromSender:viewSender withPhotos:photoWithURL andScaleImage:buttonSender.currentImage andStartIndex:0 shouldShowProgress:NO];
     }
 }
 
--(void)openPhotoBrowserFromSender:(UIView *)sender withPhotos:(NSArray *)photos andScaleImage:(UIImage *)scaleImage andStartIndex:(NSUInteger)index {
+-(void)openPhotoBrowserFromSender:(UIView *)sender withPhotos:(NSArray *)photos andScaleImage:(UIImage *)scaleImage andStartIndex:(NSUInteger)index shouldShowProgress:(BOOL)showProgress {
     IDMPhotoBrowser *browser = [[IDMPhotoBrowser alloc] initWithPhotos:photos animatedFromView:sender];
     browser.delegate = self;
     browser.displayToolbar = NO;
     browser.displayDoneButton = NO;
     browser.scaleImage = scaleImage;
+    browser.backgroundScaleFactor = 0.93f;
+    browser.showProgress = showProgress;
     [browser setInitialPageIndex:index];
     [self presentViewController:browser animated:YES completion:nil];
 }
@@ -385,7 +387,8 @@
 #pragma mark - IDMPhotoBrowser Delegate
 - (void)photoBrowser:(IDMPhotoBrowser *)photoBrowser didShowPhotoAtIndex:(NSUInteger)index
 {
-    [imagePager setCurrentPage:index animated:NO];
+    if(!photoBrowser.displayToolbar)
+        [imagePager setCurrentPage:index animated:NO];
 }
 
 - (void)photoBrowser:(IDMPhotoBrowser *)photoBrowser didDismissAtPageIndex:(NSUInteger)pageIndex
@@ -425,7 +428,7 @@
     
     NSArray *photoWithURLs = [IDMPhoto photosWithURLs:photoUrls];
     
-    [self openPhotoBrowserFromSender:imageViewSender withPhotos:photoWithURLs andScaleImage:imageViewSender.image andStartIndex:index];
+    [self openPhotoBrowserFromSender:imageViewSender withPhotos:photoWithURLs andScaleImage:imageViewSender.image andStartIndex:index shouldShowProgress:YES];
 }
 
 @end

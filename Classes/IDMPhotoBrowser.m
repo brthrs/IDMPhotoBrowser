@@ -265,7 +265,7 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
         firstX = [scrollView center].x;
         firstY = [scrollView center].y;
         
-        _senderViewForAnimation.hidden = (_currentPageIndex == _initalPageIndex);
+        //_senderViewForAnimation.hidden = (_currentPageIndex == _initalPageIndex);
         
         _isdraggingPhoto = YES;
         [self setNeedsStatusBarAppearanceUpdate];
@@ -381,11 +381,11 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
     resizableImageView.contentMode = UIViewContentModeScaleAspectFill;
     resizableImageView.backgroundColor = [UIColor colorWithWhite:(_useWhiteBackgroundColor) ? 1 : 0 alpha:1];
     [_applicationWindow addSubview:resizableImageView];
-    _senderViewForAnimation.hidden = YES;
+    //_senderViewForAnimation.hidden = YES;
     
     [UIView animateWithDuration:_animationDuration animations:^{
-        /*CGAffineTransform zoom = CGAffineTransformScale(CGAffineTransformIdentity, _backgroundScaleFactor, _backgroundScaleFactor);
-        [_applicationRootViewController.view setTransform:zoom];*/
+        CGAffineTransform zoom = CGAffineTransformScale(CGAffineTransformIdentity, _backgroundScaleFactor, _backgroundScaleFactor);
+        [_applicationRootViewController.view setTransform:zoom];
         
         fadeView.backgroundColor = self.useWhiteBackgroundColor ? [UIColor whiteColor] : [UIColor blackColor];
 
@@ -426,13 +426,13 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
     self.view.hidden = YES;
     
     [UIView animateWithDuration:_animationDuration animations:^{
-        //[_applicationRootViewController.view setTransform:CGAffineTransformIdentity];
+        [_applicationRootViewController.view setTransform:CGAffineTransformIdentity];
         
         resizableImageView.layer.frame = _resizableImageViewFrame;
         fadeView.alpha = 0;
         self.view.backgroundColor = [UIColor clearColor];
     } completion:^(BOOL finished) {
-        _senderViewForAnimation.hidden = NO;
+        //_senderViewForAnimation.hidden = NO;
         _senderViewForAnimation = nil;
         _scaleImage = nil;
         
@@ -1296,7 +1296,7 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
         [self performCloseAnimationWithScrollView:scrollView];
     }
     else {
-        _senderViewForAnimation.hidden = NO;
+        //_senderViewForAnimation.hidden = NO;
         [self prepareForClosePhotoBrowser];
         [self dismissPhotoBrowserAnimated:YES];
     }
