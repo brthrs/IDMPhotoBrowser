@@ -11,4 +11,7 @@ pod 'DACircularProgress', '~> 2.2'
 
 pod 'DCIntrospect-ARC'
 
+pod 'SDWebImage', '~> 3.6'
+pod 'KIImagePager', '~> 1.5'
+
 end
