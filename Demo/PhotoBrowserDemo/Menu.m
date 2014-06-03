@@ -135,7 +135,7 @@
     buttonWithLowResImage.frame = CGRectMake(15, yPos, imageWidth, imageHeight);
     buttonWithLowResImage.tag = 201;
     buttonWithLowResImage.adjustsImageWhenHighlighted = NO;
-    [buttonWithLowResImage setImageWithURL:[NSURL URLWithString:@"http://lorempixel.com/400/200/abstract"] forState:UIControlStateNormal];
+    [buttonWithLowResImage setImageWithURL:[NSURL URLWithString:@"http://lorempixel.com/400/200/abstract/1"] forState:UIControlStateNormal];
     [buttonWithLowResImage addTarget:self action:@selector(customButtonWithImageOnScreenPressed:) forControlEvents:UIControlEventTouchUpInside];
     [tableViewFooter addSubview:buttonWithLowResImage];
     yPos += spacing + imageHeight;
@@ -145,7 +145,7 @@
     buttonWithHighResImage.frame = CGRectMake(15, yPos, imageWidth, imageHeight);
     buttonWithHighResImage.tag = 202;
     buttonWithHighResImage.adjustsImageWhenHighlighted = NO;
-    [buttonWithHighResImage setImageWithURL:[NSURL URLWithString:@"http://lorempixel.com/400/200/fashion"] forState:UIControlStateNormal];
+    [buttonWithHighResImage setImageWithURL:[NSURL URLWithString:@"http://lorempixel.com/1600/800/fashion/1"] forState:UIControlStateNormal];
     [buttonWithHighResImage addTarget:self action:@selector(customButtonWithImageOnScreenPressed:) forControlEvents:UIControlEventTouchUpInside];
     [tableViewFooter addSubview:buttonWithHighResImage];
     yPos += spacing + imageHeight;
@@ -219,7 +219,33 @@
 }
 
 - (void)customButtonWithImageOnScreenPressed:(id)sender {
-    
+    UIView *viewSender = (UIView *)sender;
+    if(viewSender.tag == 201) {
+        UIButton *buttonSender = (UIButton *)sender;
+        
+        NSArray *photoWithURL = [IDMPhoto photosWithURLs:[NSArray arrayWithObjects:[NSURL URLWithString:@"http://lorempixel.com/400/200/abstract/1"], nil]];
+        [self openPhotoBrowserFromSender:viewSender withPhotos:photoWithURL andScaleImage:buttonSender.currentImage andStartIndex:0];
+    } else if(viewSender.tag == 202) {
+        UIButton *buttonSender = (UIButton *)sender;
+        
+        NSArray *photoWithURL = [IDMPhoto photosWithURLs:[NSArray arrayWithObjects:[NSURL URLWithString:@"http://lorempixel.com/1600/800/fashion/1"], nil]];
+        [self openPhotoBrowserFromSender:viewSender withPhotos:photoWithURL andScaleImage:buttonSender.currentImage andStartIndex:0];
+    } else if(viewSender.tag == 203) {
+        UIButton *buttonSender = (UIButton *)sender;
+        
+        NSArray *photoWithURL = [IDMPhoto photosWithURLs:[NSArray arrayWithObjects:[NSURL URLWithString:@"http://lorempixel.com/400/200/transport/1"], nil]];
+        [self openPhotoBrowserFromSender:viewSender withPhotos:photoWithURL andScaleImage:buttonSender.currentImage andStartIndex:0];
+    }
+}
+
+-(void)openPhotoBrowserFromSender:(UIView *)sender withPhotos:(NSArray *)photos andScaleImage:(UIImage *)scaleImage andStartIndex:(NSUInteger)index {
+    IDMPhotoBrowser *browser = [[IDMPhotoBrowser alloc] initWithPhotos:photos animatedFromView:sender];
+    browser.delegate = self;
+    browser.displayToolbar = NO;
+    browser.displayDoneButton = NO;
+    browser.scaleImage = scaleImage;
+    [browser setInitialPageIndex:index];
+    [self presentViewController:browser animated:YES completion:nil];
 }
 
 #pragma mark - TableView DataSource
@@ -357,6 +383,10 @@
 }
 
 #pragma mark - IDMPhotoBrowser Delegate
+- (void)photoBrowser:(IDMPhotoBrowser *)photoBrowser didShowPhotoAtIndex:(NSUInteger)index
+{
+    [imagePager setCurrentPage:index animated:NO];
+}
 
 - (void)photoBrowser:(IDMPhotoBrowser *)photoBrowser didDismissAtPageIndex:(NSUInteger)pageIndex
 {
@@ -386,7 +416,16 @@
 
 #pragma mark - KIImagePagerDelegate
 -(void)imagePager:(KIImagePager *)kiImagePager didSelectImageAtIndex:(NSUInteger)index {
-    [self customButtonWithImageOnScreenPressed:[kiImagePager.scrollView.subviews objectAtIndex:index]];
+    UIImageView *imageViewSender = (UIImageView *)[kiImagePager.scrollView.subviews objectAtIndex:index];
+    
+    NSMutableArray *photoUrls = [[NSMutableArray alloc] init];
+    for (NSString *photoUrl in [self arrayWithImages]) {
+        [photoUrls addObject:[NSURL URLWithString:photoUrl]];
+    }
+    
+    NSArray *photoWithURLs = [IDMPhoto photosWithURLs:photoUrls];
+    
+    [self openPhotoBrowserFromSender:imageViewSender withPhotos:photoWithURLs andScaleImage:imageViewSender.image andStartIndex:index];
 }
 
 @end
