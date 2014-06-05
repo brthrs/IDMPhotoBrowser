@@ -10,6 +10,7 @@
 #import "AppDelegate.h"
 #import "Menu.h"
 #import "DCIntrospect.h"
+#import "NavigationController.h"
 
 @implementation AppDelegate
 
@@ -18,13 +19,15 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+    
     // Set max cache age (in seconds)
     [[SDImageCache sharedImageCache] setMaxCacheAge:20];
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     
     Menu *menu = [[Menu alloc] initWithStyle:UITableViewStyleGrouped];
-    self.viewController = (UIViewController *)[[UINavigationController alloc] initWithRootViewController:menu];
+    self.viewController = (UIViewController *)[[NavigationController alloc] initWithRootViewController:menu];
     
     self.window.rootViewController = self.viewController;
     [self.window makeKeyAndVisible];

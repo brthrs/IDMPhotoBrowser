@@ -24,6 +24,7 @@
 		4C6F97DA14AF760500F8389A /* photo4m.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 4C6F97D214AF760500F8389A /* photo4m.jpg */; };
 		727988B1187B3B5400966C66 /* IDMPBLocalizations.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 727988B0187B3B5400966C66 /* IDMPBLocalizations.bundle */; };
 		727988B7187B3CF100966C66 /* IDMPhotoBrowser.podspec in Resources */ = {isa = PBXBuildFile; fileRef = 727988B6187B3CF100966C66 /* IDMPhotoBrowser.podspec */; };
+		88A84239194097A30003C57F /* NavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 88A84238194097A30003C57F /* NavigationController.m */; };
 		BDDE863029564DCEAF3437FF /* libPods-PhotoBrowserDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 48F398EC6BD549F7A2FDC451 /* libPods-PhotoBrowserDemo.a */; };
 		D150526F16F7ADD5002BBD4F /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D150526E16F7ADD5002BBD4F /* Default-568h@2x.png */; };
 		D1574968178DB94900B0211A /* IDMCaptionView.m in Sources */ = {isa = PBXBuildFile; fileRef = D157494F178DB94900B0211A /* IDMCaptionView.m */; };
@@ -79,6 +80,8 @@
 		7223DFC84A3E4E949E51E3F0 /* Pods-PhotoBrowserDemo.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PhotoBrowserDemo.xcconfig"; path = "Pods/Pods-PhotoBrowserDemo.xcconfig"; sourceTree = "<group>"; };
 		727988B0187B3B5400966C66 /* IDMPBLocalizations.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = IDMPBLocalizations.bundle; sourceTree = "<group>"; };
 		727988B6187B3CF100966C66 /* IDMPhotoBrowser.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = IDMPhotoBrowser.podspec; path = ../IDMPhotoBrowser.podspec; sourceTree = "<group>"; };
+		88A84237194097A30003C57F /* NavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NavigationController.h; sourceTree = "<group>"; };
+		88A84238194097A30003C57F /* NavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NavigationController.m; sourceTree = "<group>"; };
 		D11464B61802FFC4005B7BC3 /* IDMPBConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IDMPBConstants.h; sourceTree = "<group>"; };
 		D150526E16F7ADD5002BBD4F /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "../Default-568h@2x.png"; sourceTree = "<group>"; };
 		D157494E178DB94900B0211A /* IDMCaptionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IDMCaptionView.h; sourceTree = "<group>"; };
@@ -234,6 +237,8 @@
 			children = (
 				4C6F97B114AF737E00F8389A /* Menu.h */,
 				4C6F97B214AF737E00F8389A /* Menu.m */,
+				88A84237194097A30003C57F /* NavigationController.h */,
+				88A84238194097A30003C57F /* NavigationController.m */,
 			);
 			name = Menu;
 			sourceTree = "<group>";
@@ -404,6 +409,7 @@
 				4C6F97A214AF734900F8389A /* AppDelegate.m in Sources */,
 				4C6F97B314AF737E00F8389A /* Menu.m in Sources */,
 				D1574968178DB94900B0211A /* IDMCaptionView.m in Sources */,
+				88A84239194097A30003C57F /* NavigationController.m in Sources */,
 				D1574969178DB94900B0211A /* IDMPhoto.m in Sources */,
 				D157496B178DB94900B0211A /* IDMPhotoBrowser.m in Sources */,
 				D157496C178DB94900B0211A /* IDMTapDetectingImageView.m in Sources */,
