@@ -7,6 +7,7 @@
 //
 
 #import <QuartzCore/QuartzCore.h>
+#import "UIImage+ImageEffects.h"
 #import "IDMPhotoBrowser.h"
 #import "IDMZoomingScrollView.h"
 
@@ -14,6 +15,7 @@
 #define IDMPhotoBrowserLocalizedStrings(key) \
 NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBundle mainBundle] pathForResource:@"IDMPBLocalizations" ofType:@"bundle"]], nil)
 #endif
+#define IDMPhotoBrowserBlackBackgroundAlpha 0.79f
 
 // Private
 @interface IDMPhotoBrowser () {
@@ -70,6 +72,8 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
     UIWindow *_applicationWindow;
     UIViewController *_applicationRootViewController;
     int _previousModalPresentationStyle;
+    
+    UIImageView *_blurView;
 }
 
 // Private Properties
@@ -276,11 +280,11 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
     [scrollView setCenter:translatedPoint];
     
     float newY = scrollView.center.y - viewHalfHeight;
-    float newAlpha = 1 - abs(newY)/viewHeight; //abs(newY)/viewHeight * 1.8;
+    float newAlpha = IDMPhotoBrowserBlackBackgroundAlpha - ((abs(newY)/viewHeight)/IDMPhotoBrowserBlackBackgroundAlpha); //abs(newY)/viewHeight * 1.8;
     
     self.view.opaque = YES;
     
-    self.view.backgroundColor = [UIColor colorWithWhite:(_useWhiteBackgroundColor ? 1 : 0) alpha:newAlpha];
+    self.view.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:newAlpha];
     
     /*UIImageView *backgroundImageView = [[UIImageView alloc] initWithImage:_backgroundScreenshot];
     backgroundImageView.alpha = 1 - newAlpha;
@@ -290,7 +294,7 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
     if ([(UIPanGestureRecognizer*)sender state] == UIGestureRecognizerStateEnded) {
         if(scrollView.center.y > viewHalfHeight+40 || scrollView.center.y < viewHalfHeight-40) // Automatic Dismiss View
         {
-            if (_senderViewForAnimation && _currentPageIndex == _initalPageIndex) {
+            if (_senderViewForAnimation) {
                 [self performCloseAnimationWithScrollView:scrollView];
                 return;
             }
@@ -311,7 +315,7 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
             [UIView setAnimationCurve:UIViewAnimationCurveEaseIn];
             [UIView setAnimationDelegate:self];
             [scrollView setCenter:CGPointMake(finalX, finalY)];
-            self.view.backgroundColor = [UIColor colorWithWhite:0 alpha:0];
+            self.view.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0];
             //self.view.backgroundColor = [UIColor colorWithPatternImage:[self getImageFromView:backgroundImageView]];
             [UIView commitAnimations];
             
@@ -322,7 +326,7 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
             _isdraggingPhoto = NO;
             [self setNeedsStatusBarAppearanceUpdate];
             
-            self.view.backgroundColor = [UIColor colorWithWhite:(_useWhiteBackgroundColor ? 1 : 0) alpha:1];
+            self.view.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:IDMPhotoBrowserBlackBackgroundAlpha];
             //self.view.backgroundColor = [UIColor colorWithPatternImage:[self getImageFromView:backgroundImageView]];
             
             CGFloat velocityY = (.35*[(UIPanGestureRecognizer*)sender velocityInView:self.view].y); 
@@ -361,8 +365,6 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
 }
 
 - (void)performPresentAnimation {
-    self.view.alpha = 0.0f;
-    
     _imageFromView = _scaleImage ? _scaleImage : [self getImageFromView:_senderViewForAnimation];
     _imageFromView = [self rotateImageToCurrentOrientation:_imageFromView];
     
@@ -372,8 +374,17 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
     CGFloat screenWidth = screenBound.size.width;
     CGFloat screenHeight = screenBound.size.height;
     
+    _blurView = [[UIImageView alloc] initWithFrame:screenBound];
+    _blurView.clipsToBounds = NO;
+    _blurView.contentMode = UIViewContentModeCenter;
+    _blurView.image = [[self getPreparedImageFromView:_applicationRootViewController.view] applyBlurWithRadius:9 tintColor: [UIColor clearColor] saturationDeltaFactor:1.8 maskImage:nil];
+    _blurView.alpha = 0;
+    //[_applicationWindow addSubview:_blurView];
+    [_applicationWindow insertSubview:_blurView aboveSubview:_applicationRootViewController.view];
+    
     UIView *fadeView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, screenWidth, screenHeight)];
-    fadeView.backgroundColor = [UIColor clearColor];
+    fadeView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:IDMPhotoBrowserBlackBackgroundAlpha];
+    fadeView.alpha = 0.0f;
     [_applicationWindow addSubview:fadeView];
     
     UIImageView *resizableImageView = [[UIImageView alloc] initWithImage:_imageFromView];
@@ -387,14 +398,17 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
     [UIView animateWithDuration:_animationDuration animations:^{
         CGAffineTransform zoom = CGAffineTransformScale(CGAffineTransformIdentity, _backgroundScaleFactor, _backgroundScaleFactor);
         [_applicationRootViewController.view setTransform:zoom];
-        
-        fadeView.backgroundColor = self.useWhiteBackgroundColor ? [UIColor whiteColor] : [UIColor blackColor];
+        [_blurView setTransform:zoom];
+        _blurView.alpha = 1.0f;
 
         float scaleFactor = (_imageFromView ? _imageFromView.size.width : screenWidth) / screenWidth;
-        
         resizableImageView.frame = CGRectMake(0, (screenHeight/2)-((_imageFromView.size.height / scaleFactor)/2), screenWidth, _imageFromView.size.height / scaleFactor);
+        
+        fadeView.alpha = 1.0f;
+        
     } completion:^(BOOL finished) {
-        self.view.alpha = 1.0f;
+        self.view.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:IDMPhotoBrowserBlackBackgroundAlpha];
+        _pagingScrollView.hidden = NO;
         resizableImageView.backgroundColor = [UIColor colorWithWhite:(_useWhiteBackgroundColor) ? 1 : 0 alpha:1];
         [fadeView removeFromSuperview];
         [resizableImageView removeFromSuperview];
@@ -402,7 +416,7 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
 }
 
 - (void)performCloseAnimationWithScrollView:(IDMZoomingScrollView*)scrollView {
-    float fadeAlpha = 1 - abs(scrollView.frame.origin.y)/scrollView.frame.size.height;
+    float fadeAlpha = IDMPhotoBrowserBlackBackgroundAlpha - ((abs(scrollView.frame.origin.y)/scrollView.frame.size.height)/IDMPhotoBrowserBlackBackgroundAlpha);
     
     UIImage *imageFromView;
     if([scrollView.photo underlyingImage] || !self.showPlaceholderImage) {
@@ -419,7 +433,7 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
     float scaleFactor = imageFromView.size.width / screenWidth;
     
     UIView *fadeView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, screenWidth, screenHeight)];
-    fadeView.backgroundColor = self.useWhiteBackgroundColor ? [UIColor whiteColor] : [UIColor blackColor];
+    fadeView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:IDMPhotoBrowserBlackBackgroundAlpha];
     fadeView.alpha = fadeAlpha;
     [_applicationWindow addSubview:fadeView];
     
@@ -433,6 +447,8 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
     
     [UIView animateWithDuration:_animationDuration animations:^{
         [_applicationRootViewController.view setTransform:CGAffineTransformIdentity];
+        [_blurView setTransform:CGAffineTransformIdentity];
+        _blurView.alpha = 0.0f;
         
         resizableImageView.layer.frame = _resizableImageViewFrame;
         fadeView.alpha = 0;
@@ -441,6 +457,8 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
         //_senderViewForAnimation.hidden = NO;
         _senderViewForAnimation = nil;
         _scaleImage = nil;
+        [_blurView removeFromSuperview];
+        _blurView = nil;
         
         [fadeView removeFromSuperview];
         [resizableImageView removeFromSuperview];
@@ -503,6 +521,15 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
     return image;
 }
 
+- (UIImage*)getPreparedImageFromView:(UIView *)view {
+    UIGraphicsBeginImageContextWithOptions(CGSizeMake(view.frame.size.width + 50, view.frame.size.height + 50), YES, 1);
+    CGContextTranslateCTM(UIGraphicsGetCurrentContext(), 25, 25);
+    [view.layer renderInContext:UIGraphicsGetCurrentContext()];
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return image;
+}
+
 /*- (UIImage*)takeScreenshot {
     UIGraphicsBeginImageContext(_applicationWindow.bounds.size);
     [window.layer renderInContext:UIGraphicsGetCurrentContext()];
@@ -527,7 +554,7 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
     }*/
     
     // View
-	self.view.backgroundColor = [UIColor colorWithWhite:(_useWhiteBackgroundColor ? 1 : 0) alpha:1];
+//	self.view.backgroundColor = [UIColor colorWithWhite:(_useWhiteBackgroundColor ? 1 : 0) alpha:1];
     
     self.view.clipsToBounds = YES;
     
@@ -542,6 +569,7 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
 	_pagingScrollView.backgroundColor = [UIColor clearColor];
     _pagingScrollView.contentSize = [self contentSizeForPagingScrollView];
 	[self.view addSubview:_pagingScrollView];
+    _pagingScrollView.hidden = YES;
     
     UIInterfaceOrientation currentOrientation = [UIApplication sharedApplication].statusBarOrientation;
 

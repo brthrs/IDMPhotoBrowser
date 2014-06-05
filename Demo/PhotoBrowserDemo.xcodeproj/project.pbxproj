@@ -25,6 +25,8 @@
 		727988B1187B3B5400966C66 /* IDMPBLocalizations.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 727988B0187B3B5400966C66 /* IDMPBLocalizations.bundle */; };
 		727988B7187B3CF100966C66 /* IDMPhotoBrowser.podspec in Resources */ = {isa = PBXBuildFile; fileRef = 727988B6187B3CF100966C66 /* IDMPhotoBrowser.podspec */; };
 		88A84239194097A30003C57F /* NavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 88A84238194097A30003C57F /* NavigationController.m */; };
+		88A8423B1940ABE10003C57F /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 88A8423A1940ABE10003C57F /* Accelerate.framework */; };
+		88A842421940AC490003C57F /* UIImage+ImageEffects.m in Sources */ = {isa = PBXBuildFile; fileRef = 88A842411940AC490003C57F /* UIImage+ImageEffects.m */; };
 		BDDE863029564DCEAF3437FF /* libPods-PhotoBrowserDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 48F398EC6BD549F7A2FDC451 /* libPods-PhotoBrowserDemo.a */; };
 		D150526F16F7ADD5002BBD4F /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D150526E16F7ADD5002BBD4F /* Default-568h@2x.png */; };
 		D1574968178DB94900B0211A /* IDMCaptionView.m in Sources */ = {isa = PBXBuildFile; fileRef = D157494F178DB94900B0211A /* IDMCaptionView.m */; };
@@ -82,6 +84,9 @@
 		727988B6187B3CF100966C66 /* IDMPhotoBrowser.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = IDMPhotoBrowser.podspec; path = ../IDMPhotoBrowser.podspec; sourceTree = "<group>"; };
 		88A84237194097A30003C57F /* NavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NavigationController.h; sourceTree = "<group>"; };
 		88A84238194097A30003C57F /* NavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NavigationController.m; sourceTree = "<group>"; };
+		88A8423A1940ABE10003C57F /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
+		88A842401940AC490003C57F /* UIImage+ImageEffects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+ImageEffects.h"; sourceTree = "<group>"; };
+		88A842411940AC490003C57F /* UIImage+ImageEffects.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+ImageEffects.m"; sourceTree = "<group>"; };
 		D11464B61802FFC4005B7BC3 /* IDMPBConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IDMPBConstants.h; sourceTree = "<group>"; };
 		D150526E16F7ADD5002BBD4F /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "../Default-568h@2x.png"; sourceTree = "<group>"; };
 		D157494E178DB94900B0211A /* IDMCaptionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IDMCaptionView.h; sourceTree = "<group>"; };
@@ -124,6 +129,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				88A8423B1940ABE10003C57F /* Accelerate.framework in Frameworks */,
 				D1FA3A911805C340000FFE18 /* Security.framework in Frameworks */,
 				D1890F7217C66CA70065C101 /* ImageIO.framework in Frameworks */,
 				D1A1935D1758F42A00CE615F /* MobileCoreServices.framework in Frameworks */,
@@ -167,6 +173,7 @@
 		4C6F979014AF734900F8389A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				88A8423A1940ABE10003C57F /* Accelerate.framework */,
 				D1FA3A901805C340000FFE18 /* Security.framework */,
 				4C6F979514AF734900F8389A /* CoreGraphics.framework */,
 				4C6F979314AF734900F8389A /* Foundation.framework */,
@@ -246,6 +253,8 @@
 		D1574931178DB94900B0211A /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				88A842401940AC490003C57F /* UIImage+ImageEffects.h */,
+				88A842411940AC490003C57F /* UIImage+ImageEffects.m */,
 				D157494E178DB94900B0211A /* IDMCaptionView.h */,
 				D157494F178DB94900B0211A /* IDMCaptionView.m */,
 				D11464B61802FFC4005B7BC3 /* IDMPBConstants.h */,
@@ -409,6 +418,7 @@
 				4C6F97A214AF734900F8389A /* AppDelegate.m in Sources */,
 				4C6F97B314AF737E00F8389A /* Menu.m in Sources */,
 				D1574968178DB94900B0211A /* IDMCaptionView.m in Sources */,
+				88A842421940AC490003C57F /* UIImage+ImageEffects.m in Sources */,
 				88A84239194097A30003C57F /* NavigationController.m in Sources */,
 				D1574969178DB94900B0211A /* IDMPhoto.m in Sources */,
 				D157496B178DB94900B0211A /* IDMPhotoBrowser.m in Sources */,
@@ -498,7 +508,7 @@
 				INFOPLIST_FILE = "PhotoBrowserDemo/PhotoBrowserDemo-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 				USER_HEADER_SEARCH_PATHS = "../**";
 				WRAPPER_EXTENSION = app;
 			};
@@ -515,7 +525,7 @@
 				INFOPLIST_FILE = "PhotoBrowserDemo/PhotoBrowserDemo-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 				USER_HEADER_SEARCH_PATHS = "../**";
 				WRAPPER_EXTENSION = app;
 			};

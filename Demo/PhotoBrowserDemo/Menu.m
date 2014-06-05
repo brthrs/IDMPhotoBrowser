@@ -391,7 +391,7 @@
 - (void)photoBrowser:(IDMPhotoBrowser *)photoBrowser didShowPhotoAtIndex:(NSUInteger)index
 {
     if(!photoBrowser.displayToolbar)
-        [imagePager setCurrentPage:index animated:NO];
+        [imagePager setCurrentPage:index animated:YES];
 }
 
 - (void)photoBrowser:(IDMPhotoBrowser *)photoBrowser didDismissAtPageIndex:(NSUInteger)pageIndex
