@@ -311,10 +311,12 @@
 
 // Background View
 - (void)view:(UIView *)view singleTapDetected:(UITouch *)touch {
-    [self handleSingleTap:[touch locationInView:view]];
+    [self.photoBrowser cancelPhotoBrowser];
+    //[self handleSingleTap:[touch locationInView:view]];
 }
 - (void)view:(UIView *)view doubleTapDetected:(UITouch *)touch {
-    [self handleDoubleTap:[touch locationInView:view]];
+    [self.photoBrowser cancelPhotoBrowser];
+    //[self handleDoubleTap:[touch locationInView:view]];
 }
 
 @end

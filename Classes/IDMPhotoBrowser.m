@@ -526,6 +526,13 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
     return image;
 }
 
+- (void) cancelPhotoBrowser {
+    if (_senderViewForAnimation) {
+        IDMZoomingScrollView *scrollView = [self pageDisplayedAtIndex:_currentPageIndex];
+        [self performCloseAnimationWithScrollView:scrollView];
+    }
+}
+
 /*- (UIImage*)takeScreenshot {
     UIGraphicsBeginImageContext(_applicationWindow.bounds.size);
     [window.layer renderInContext:UIGraphicsGetCurrentContext()];

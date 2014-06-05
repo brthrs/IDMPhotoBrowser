@@ -80,6 +80,8 @@
 
 - (UIImage *)placeholderImage;
 
+- (void) cancelPhotoBrowser;
+
 // Change Sender View
 //- (void)setSenderViewForAnimation:(UIView*)senderView;
 
