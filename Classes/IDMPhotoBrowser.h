@@ -53,6 +53,10 @@
 // animation time defult .28
 @property (nonatomic) float animationDuration;
 
+/* custom properties */
+@property (nonatomic) BOOL showProgress;
+@property (nonatomic) BOOL showPlaceholderImage;
+
 // Init
 - (id)initWithPhotos:(NSArray *)photosArray;
 
@@ -74,10 +78,9 @@
 // Get IDMPhoto at index
 - (id<IDMPhoto>)photoAtIndex:(NSUInteger)index;
 
+- (UIImage *)placeholderImage;
+
 // Change Sender View
 //- (void)setSenderViewForAnimation:(UIView*)senderView;
-
-/* custom properties */
-@property (nonatomic) BOOL showProgress;
 
 @end

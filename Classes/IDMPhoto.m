@@ -134,7 +134,7 @@ caption = _caption;
         if (_photoPath) {
             // Load async from file
             [self performSelectorInBackground:@selector(loadImageFromFileAsync) withObject:nil];
-        } else if (_photoURL) {
+        } else if (_photoURL) {            
             // Load async from web (using AFNetworking)
             NSURLRequest *request = [NSURLRequest requestWithURL:_photoURL];
             

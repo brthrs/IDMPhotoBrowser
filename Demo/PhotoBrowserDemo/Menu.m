@@ -224,21 +224,21 @@
         UIButton *buttonSender = (UIButton *)sender;
         
         NSArray *photoWithURL = [IDMPhoto photosWithURLs:[NSArray arrayWithObjects:[NSURL URLWithString:@"http://lorempixel.com/400/200/abstract/1"], nil]];
-        [self openPhotoBrowserFromSender:viewSender withPhotos:photoWithURL andScaleImage:buttonSender.currentImage andStartIndex:0 shouldShowProgress:NO];
+        [self openPhotoBrowserFromSender:viewSender withPhotos:photoWithURL andScaleImage:buttonSender.currentImage andStartIndex:0 shouldShowProgress:NO shouldShowPlaceholderImage:YES];
     } else if(viewSender.tag == 202) {
         UIButton *buttonSender = (UIButton *)sender;
         
         NSArray *photoWithURL = [IDMPhoto photosWithURLs:[NSArray arrayWithObjects:[NSURL URLWithString:@"http://lorempixel.com/1600/800/fashion/1"], nil]];
-        [self openPhotoBrowserFromSender:viewSender withPhotos:photoWithURL andScaleImage:buttonSender.currentImage andStartIndex:0 shouldShowProgress:NO];
+        [self openPhotoBrowserFromSender:viewSender withPhotos:photoWithURL andScaleImage:buttonSender.currentImage andStartIndex:0 shouldShowProgress:NO shouldShowPlaceholderImage:YES];
     } else if(viewSender.tag == 203) {
         UIButton *buttonSender = (UIButton *)sender;
         
         NSArray *photoWithURL = [IDMPhoto photosWithURLs:[NSArray arrayWithObjects:[NSURL URLWithString:@"http://lorempixel.com/400/200/transport/1"], nil]];
-        [self openPhotoBrowserFromSender:viewSender withPhotos:photoWithURL andScaleImage:buttonSender.currentImage andStartIndex:0 shouldShowProgress:NO];
+        [self openPhotoBrowserFromSender:viewSender withPhotos:photoWithURL andScaleImage:buttonSender.currentImage andStartIndex:0 shouldShowProgress:NO shouldShowPlaceholderImage:YES];
     }
 }
 
--(void)openPhotoBrowserFromSender:(UIView *)sender withPhotos:(NSArray *)photos andScaleImage:(UIImage *)scaleImage andStartIndex:(NSUInteger)index shouldShowProgress:(BOOL)showProgress {
+-(void)openPhotoBrowserFromSender:(UIView *)sender withPhotos:(NSArray *)photos andScaleImage:(UIImage *)scaleImage andStartIndex:(NSUInteger)index shouldShowProgress:(BOOL)showProgress shouldShowPlaceholderImage:(BOOL)showPlaceholderImage{
     IDMPhotoBrowser *browser = [[IDMPhotoBrowser alloc] initWithPhotos:photos animatedFromView:sender];
     browser.delegate = self;
     browser.displayToolbar = NO;
@@ -246,6 +246,7 @@
     browser.scaleImage = scaleImage;
     browser.backgroundScaleFactor = 0.93f;
     browser.showProgress = showProgress;
+    browser.showPlaceholderImage = showPlaceholderImage;
     [browser setInitialPageIndex:index];
     [self presentViewController:browser animated:YES completion:nil];
 }
@@ -253,7 +254,7 @@
 #pragma mark - TableView DataSource
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 0;
+    return 3;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -353,6 +354,8 @@
     // Create and setup browser
     IDMPhotoBrowser *browser = [[IDMPhotoBrowser alloc] initWithPhotos:photos];
     browser.delegate = self;
+    browser.showProgress = YES;
+    browser.showPlaceholderImage = YES;
     
     if(indexPath.section == 1) // Multiple photos
     {
@@ -428,7 +431,8 @@
     
     NSArray *photoWithURLs = [IDMPhoto photosWithURLs:photoUrls];
     
-    [self openPhotoBrowserFromSender:imageViewSender withPhotos:photoWithURLs andScaleImage:imageViewSender.image andStartIndex:index shouldShowProgress:YES];
+    // Setting a placeholder for multiple images is useless
+    [self openPhotoBrowserFromSender:imageViewSender withPhotos:photoWithURLs andScaleImage:imageViewSender.image andStartIndex:index shouldShowProgress:YES shouldShowPlaceholderImage:NO];
 }
 
 @end

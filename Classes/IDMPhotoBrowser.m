@@ -64,6 +64,7 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
     BOOL _isdraggingPhoto;
 
     CGRect _resizableImageViewFrame;
+    UIImage *_imageFromView;
     //UIImage *_backgroundScreenshot;
     
     UIWindow *_applicationWindow;
@@ -362,8 +363,8 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
 - (void)performPresentAnimation {
     self.view.alpha = 0.0f;
     
-    UIImage *imageFromView = _scaleImage ? _scaleImage : [self getImageFromView:_senderViewForAnimation];
-    imageFromView = [self rotateImageToCurrentOrientation:imageFromView];
+    _imageFromView = _scaleImage ? _scaleImage : [self getImageFromView:_senderViewForAnimation];
+    _imageFromView = [self rotateImageToCurrentOrientation:_imageFromView];
     
     _resizableImageViewFrame = [_senderViewForAnimation.superview convertRect:_senderViewForAnimation.frame toView:nil];
     
@@ -375,7 +376,7 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
     fadeView.backgroundColor = [UIColor clearColor];
     [_applicationWindow addSubview:fadeView];
     
-    UIImageView *resizableImageView = [[UIImageView alloc] initWithImage:imageFromView];
+    UIImageView *resizableImageView = [[UIImageView alloc] initWithImage:_imageFromView];
     resizableImageView.frame = _resizableImageViewFrame;
     resizableImageView.clipsToBounds = YES;
     resizableImageView.contentMode = UIViewContentModeScaleAspectFill;
@@ -389,9 +390,9 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
         
         fadeView.backgroundColor = self.useWhiteBackgroundColor ? [UIColor whiteColor] : [UIColor blackColor];
 
-        float scaleFactor = (imageFromView ? imageFromView.size.width : screenWidth) / screenWidth;
+        float scaleFactor = (_imageFromView ? _imageFromView.size.width : screenWidth) / screenWidth;
         
-        resizableImageView.frame = CGRectMake(0, (screenHeight/2)-((imageFromView.size.height / scaleFactor)/2), screenWidth, imageFromView.size.height / scaleFactor);
+        resizableImageView.frame = CGRectMake(0, (screenHeight/2)-((_imageFromView.size.height / scaleFactor)/2), screenWidth, _imageFromView.size.height / scaleFactor);
     } completion:^(BOOL finished) {
         self.view.alpha = 1.0f;
         resizableImageView.backgroundColor = [UIColor colorWithWhite:(_useWhiteBackgroundColor) ? 1 : 0 alpha:1];
@@ -403,7 +404,12 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
 - (void)performCloseAnimationWithScrollView:(IDMZoomingScrollView*)scrollView {
     float fadeAlpha = 1 - abs(scrollView.frame.origin.y)/scrollView.frame.size.height;
     
-    UIImage *imageFromView = [scrollView.photo underlyingImage];
+    UIImage *imageFromView;
+    if([scrollView.photo underlyingImage] || !self.showPlaceholderImage) {
+        imageFromView = [scrollView.photo underlyingImage];
+    } else {
+        imageFromView = _imageFromView;
+    }
     //imageFromView = [self rotateImageToCurrentOrientation:imageFromView];
 
     CGRect screenBound = [[UIScreen mainScreen] bounds];
@@ -1286,6 +1292,10 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
         [self jumpToPageAtIndex:index];
         if (!_viewIsActive) [self tilePages]; // Force tiling if view is not visible
     }
+}
+
+- (UIImage *)placeholderImage {
+    return _imageFromView;
 }
 
 #pragma mark - Buttons
