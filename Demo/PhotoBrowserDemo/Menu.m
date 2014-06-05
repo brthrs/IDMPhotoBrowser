@@ -412,7 +412,7 @@
 #pragma mark - KIImagePagerDataSource
 - (NSArray *)arrayWithImages
 {
-    return @[@"http://lorempixel.com/320/180/sports/1", @"http://lorempixel.com/320/180/cats/1", @"http://lorempixel.com/320/180/people/1"];
+    return @[@"http://lorempixel.com/320/180/sports/1", @"http://lorempixel.com/320/180/cats/1", @"http://lorempixel.com/320/180/people/1", @"https://grwo-uploads.s3.amazonaws.com/673d115fc08db7bc2f1c4377e40ab9f8832b4560/thumb_avatar.jpeg"];
 }
 
 - (UIViewContentMode)contentModeForImage:(NSUInteger)image

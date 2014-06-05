@@ -294,10 +294,6 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
     if ([(UIPanGestureRecognizer*)sender state] == UIGestureRecognizerStateEnded) {
         if(scrollView.center.y > viewHalfHeight+40 || scrollView.center.y < viewHalfHeight-40) // Automatic Dismiss View
         {
-            if (_senderViewForAnimation) {
-                [self performCloseAnimationWithScrollView:scrollView];
-                return;
-            }
             
             CGFloat finalX = firstX, finalY;
             
@@ -308,18 +304,18 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
             else // swipe up
                 finalY = -viewHalfHeight;
             
-            CGFloat animationDuration = 0.35;
-            
             [UIView beginAnimations:nil context:NULL];
-            [UIView setAnimationDuration:animationDuration];
-            [UIView setAnimationCurve:UIViewAnimationCurveEaseIn];
+            [UIView setAnimationDuration:_animationDuration];
             [UIView setAnimationDelegate:self];
             [scrollView setCenter:CGPointMake(finalX, finalY)];
-            self.view.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0];
             //self.view.backgroundColor = [UIColor colorWithPatternImage:[self getImageFromView:backgroundImageView]];
+            [_applicationRootViewController.view setTransform:CGAffineTransformIdentity];
+            [_blurView setTransform:CGAffineTransformIdentity];
+            _blurView.alpha = 0.0f;
+            self.view.backgroundColor = [UIColor clearColor];
             [UIView commitAnimations];
             
-            [self performSelector:@selector(doneButtonPressed:) withObject:self afterDelay:animationDuration];
+            [self performSelector:@selector(doneButtonPressed:) withObject:self afterDelay:_animationDuration];
         }
         else // Continue Showing View
         {
@@ -1330,15 +1326,15 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
 #pragma mark - Buttons
 
 - (void)doneButtonPressed:(id)sender {
-    if (_senderViewForAnimation && _currentPageIndex == _initalPageIndex) {
+    /*if (_senderViewForAnimation && _currentPageIndex == _initalPageIndex) {
         IDMZoomingScrollView *scrollView = [self pageDisplayedAtIndex:_currentPageIndex];
         [self performCloseAnimationWithScrollView:scrollView];
     }
-    else {
+    else {*/
         //_senderViewForAnimation.hidden = NO;
         [self prepareForClosePhotoBrowser];
         [self dismissPhotoBrowserAnimated:YES];
-    }
+    //}
 }
 
 - (void)actionButtonPressed:(id)sender {
