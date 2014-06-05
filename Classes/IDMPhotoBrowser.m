@@ -74,6 +74,8 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
     int _previousModalPresentationStyle;
     
     UIImageView *_blurView;
+    
+    BOOL shouldNowHideStatusBar;
 }
 
 // Private Properties
@@ -304,6 +306,8 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
             else // swipe up
                 finalY = -viewHalfHeight;
             
+            shouldNowHideStatusBar = NO;
+            [self setNeedsStatusBarAppearanceUpdate];
             [UIView beginAnimations:nil context:NULL];
             [UIView setAnimationDuration:_animationDuration];
             [UIView setAnimationDelegate:self];
@@ -361,6 +365,7 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
 }
 
 - (void)performPresentAnimation {
+    
     _imageFromView = _scaleImage ? _scaleImage : [self getImageFromView:_senderViewForAnimation];
     _imageFromView = [self rotateImageToCurrentOrientation:_imageFromView];
     
@@ -412,6 +417,9 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
 }
 
 - (void)performCloseAnimationWithScrollView:(IDMZoomingScrollView*)scrollView {
+    shouldNowHideStatusBar = NO;
+    [self setNeedsStatusBarAppearanceUpdate];
+    
     float fadeAlpha = IDMPhotoBrowserBlackBackgroundAlpha - ((abs(scrollView.frame.origin.y)/scrollView.frame.size.height)/IDMPhotoBrowserBlackBackgroundAlpha);
     
     UIImage *imageFromView;
@@ -544,6 +552,7 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
 #pragma mark - View Lifecycle
 
 - (void)viewDidLoad {
+    shouldNowHideStatusBar = YES;
     // Transition animation
     [self performPresentAnimation];
     
@@ -708,17 +717,7 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
 }
 
 - (BOOL)prefersStatusBarHidden {
-    if(_isdraggingPhoto)
-    {
-        if(_statusBarOriginallyHidden)
-            return YES;
-        else
-            return NO;
-    }
-    else
-    {
-        return [self areControlsHidden];
-    }
+    return shouldNowHideStatusBar;
 }
 
 - (UIStatusBarAnimation)preferredStatusBarUpdateAnimation {
@@ -1340,7 +1339,7 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
     else {*/
         //_senderViewForAnimation.hidden = NO;
         [self prepareForClosePhotoBrowser];
-        [self dismissPhotoBrowserAnimated:YES];
+        [self dismissPhotoBrowserAnimated:NO];
     //}
 }
 
