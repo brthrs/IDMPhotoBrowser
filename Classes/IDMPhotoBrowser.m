@@ -413,6 +413,9 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
         resizableImageView.backgroundColor = [UIColor colorWithWhite:(_useWhiteBackgroundColor) ? 1 : 0 alpha:1];
         [fadeView removeFromSuperview];
         [resizableImageView removeFromSuperview];
+        
+        shouldNowHideStatusBar = YES;
+        [self setNeedsStatusBarAppearanceUpdate];
     }];
 }
 
@@ -552,7 +555,6 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
 #pragma mark - View Lifecycle
 
 - (void)viewDidLoad {
-    shouldNowHideStatusBar = YES;
     // Transition animation
     [self performPresentAnimation];
     
