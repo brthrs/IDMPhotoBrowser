@@ -26,6 +26,8 @@
 	IDMTapDetectingView *_tapView; // for background taps
     
     DACircularProgressView *_progressView;
+    
+    BOOL shouldCancelAftwards;
 }
 
 @property (nonatomic, strong) IDMTapDetectingImageView *photoImageView;

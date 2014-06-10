@@ -273,6 +273,13 @@
 	[_photoBrowser hideControlsAfterDelay];
 }
 
+- (void)scrollViewDidEndZooming:(UIScrollView *)scrollView withView:(UIView *)view atScale:(CGFloat)scale {
+    if(scale == self.minimumZoomScale && shouldCancelAftwards) {
+        shouldCancelAftwards = NO;
+        [self.photoBrowser cancelPhotoBrowser];
+    }
+}
+
 #pragma mark - Tap Detection
 
 - (void)handleSingleTap:(CGPoint)touchPoint {
@@ -311,12 +318,23 @@
 
 // Background View
 - (void)view:(UIView *)view singleTapDetected:(UITouch *)touch {
-    [self.photoBrowser cancelPhotoBrowser];
+    [self handleTapGestures];
     //[self handleSingleTap:[touch locationInView:view]];
 }
 - (void)view:(UIView *)view doubleTapDetected:(UITouch *)touch {
-    [self.photoBrowser cancelPhotoBrowser];
+    [self handleTapGestures];
     //[self handleDoubleTap:[touch locationInView:view]];
+}
+
+-(void) handleTapGestures {
+    if(self.minimumZoomScale == self.zoomScale) {
+        // If photo is already zoomed out then cancel the photo browser
+        [self.photoBrowser cancelPhotoBrowser];
+    } else {
+        // Other wise first zoom to minimum scale and then cancel the photo browser. See delegate method scrollViewDidEndZooming
+        shouldCancelAftwards = YES;
+        [self setZoomScale:self.minimumZoomScale animated:YES];
+    }
 }
 
 @end
