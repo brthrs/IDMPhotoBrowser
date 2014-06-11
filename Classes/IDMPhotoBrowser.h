@@ -23,7 +23,7 @@
 @end
 
 // IDMPhotoBrowser
-@interface IDMPhotoBrowser : UIViewController <UIScrollViewDelegate, UIActionSheetDelegate> 
+@interface IDMPhotoBrowser : UIViewController <UIScrollViewDelegate, UIActionSheetDelegate>
 
 // Properties
 @property (nonatomic, strong) id <IDMPhotoBrowserDelegate> delegate;
@@ -56,6 +56,7 @@
 /* custom properties */
 @property (nonatomic) BOOL showProgress;
 @property (nonatomic) BOOL showPlaceholderImage;
+@property (nonatomic) float roundnessValue;
 
 // Init
 - (id)initWithPhotos:(NSArray *)photosArray;
