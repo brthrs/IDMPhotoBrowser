@@ -74,6 +74,7 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
     int _previousModalPresentationStyle;
     
     UIImageView *_blurView;
+    UIView *_backgroundView;
     
     BOOL shouldNowHideStatusBar;
 }
@@ -286,9 +287,8 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
     float newY = scrollView.center.y - viewHalfHeight;
     float newAlpha = IDMPhotoBrowserBlackBackgroundAlpha - ((abs(newY)/viewHeight)/IDMPhotoBrowserBlackBackgroundAlpha); //abs(newY)/viewHeight * 1.8;
     
-    self.view.opaque = YES;
-    
-    self.view.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:newAlpha];
+    _backgroundView.opaque = YES;
+    _backgroundView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:newAlpha];
     
     /*UIImageView *backgroundImageView = [[UIImageView alloc] initWithImage:_backgroundScreenshot];
      backgroundImageView.alpha = 1 - newAlpha;
@@ -318,7 +318,7 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
             [_applicationRootViewController.view setTransform:CGAffineTransformIdentity];
             [_blurView setTransform:CGAffineTransformIdentity];
             _blurView.alpha = 0.0f;
-            self.view.backgroundColor = [UIColor clearColor];
+            _backgroundView.backgroundColor = [UIColor clearColor];
             [UIView commitAnimations];
             
             [self performSelector:@selector(doneButtonPressed:) withObject:self afterDelay:_animationDuration];
@@ -328,7 +328,7 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
             _isdraggingPhoto = NO;
             [self setNeedsStatusBarAppearanceUpdate];
             
-            self.view.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:IDMPhotoBrowserBlackBackgroundAlpha];
+            _backgroundView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:IDMPhotoBrowserBlackBackgroundAlpha];
             //self.view.backgroundColor = [UIColor colorWithPatternImage:[self getImageFromView:backgroundImageView]];
             
             CGFloat velocityY = (.35*[(UIPanGestureRecognizer*)sender velocityInView:self.view].y);
@@ -385,6 +385,13 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
     //[_applicationWindow addSubview:_blurView];
     [_applicationWindow insertSubview:_blurView aboveSubview:_applicationRootViewController.view];
     
+    
+    _backgroundView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, screenHeight, screenHeight)];
+    _backgroundView.backgroundColor = [UIColor clearColor];
+    _backgroundView.userInteractionEnabled = NO;
+    //[_applicationWindow addSubview:_backgroundView];
+    [_applicationWindow insertSubview:_backgroundView aboveSubview:_blurView];
+    
     UIView *fadeView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, screenWidth, screenHeight)];
     fadeView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:IDMPhotoBrowserBlackBackgroundAlpha];
     fadeView.alpha = 0.0f;
@@ -421,7 +428,7 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
         fadeView.alpha = 1.0f;
         
     } completion:^(BOOL finished) {
-        self.view.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:IDMPhotoBrowserBlackBackgroundAlpha];
+        _backgroundView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:IDMPhotoBrowserBlackBackgroundAlpha];
         _pagingScrollView.hidden = NO;
         resizableImageView.backgroundColor = [UIColor colorWithWhite:(_useWhiteBackgroundColor) ? 1 : 0 alpha:1];
         [fadeView removeFromSuperview];
@@ -482,7 +489,7 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
         
         resizableImageView.layer.frame = _resizableImageViewFrame;
         fadeView.alpha = 0;
-        self.view.backgroundColor = [UIColor clearColor];
+        _backgroundView.backgroundColor = [UIColor clearColor];
     } completion:^(BOOL finished) {
         //_senderViewForAnimation.hidden = NO;
         _senderViewForAnimation = nil;
@@ -491,6 +498,7 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
         _blurView = nil;
         
         [fadeView removeFromSuperview];
+        [_backgroundView removeFromSuperview];
         [resizableImageView removeFromSuperview];
         
         [self prepareForClosePhotoBrowser];
@@ -592,7 +600,7 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
     
     // View
     //	self.view.backgroundColor = [UIColor colorWithWhite:(_useWhiteBackgroundColor ? 1 : 0) alpha:1];
-    
+    self.view.backgroundColor = [UIColor clearColor];
     self.view.clipsToBounds = YES;
     
 	// Setup paging scrolling view
