@@ -138,7 +138,11 @@
                 // Setup photo frame
                 CGRect photoImageViewFrame;
                 photoImageViewFrame.origin = CGPointZero;
-                photoImageViewFrame.size = _photoImageView.image.size;
+                
+                CGFloat fullWidth = 320;
+                CGFloat width = fullWidth;
+                CGFloat height = (fullWidth / _photoImageView.image.size.width) * _photoImageView.image.size.height;
+                photoImageViewFrame.size = CGSizeMake(width, height);
                 
                 _photoImageView.frame = photoImageViewFrame;
                 self.contentSize = photoImageViewFrame.size;
