@@ -77,6 +77,8 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
     UIView *_backgroundView;
     
     BOOL shouldNowHideStatusBar;
+    
+    BOOL shouldAutorotate;
 }
 
 // Private Properties
@@ -198,6 +200,8 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
                                                    object:nil];
         
         self.roundnessValue = 0.0f;
+        
+        shouldAutorotate = YES;
     }
     
     return self;
@@ -307,6 +311,9 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
                 finalY = windowsHeigt*2;
             else // swipe up
                 finalY = -viewHalfHeight;
+            
+            shouldAutorotate = NO;
+            [[UIApplication sharedApplication] setStatusBarOrientation:UIInterfaceOrientationPortrait animated:NO];
             
             shouldNowHideStatusBar = NO;
             [self setNeedsStatusBarAppearanceUpdate];
@@ -440,6 +447,9 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
 }
 
 - (void)performCloseAnimationWithScrollView:(IDMZoomingScrollView*)scrollView {
+    shouldAutorotate = NO;
+    [[UIApplication sharedApplication] setStatusBarOrientation:UIInterfaceOrientationPortrait animated:NO];
+    
     shouldNowHideStatusBar = NO;
     [self setNeedsStatusBarAppearanceUpdate];
     
@@ -893,7 +903,12 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
 {
     //NSLog(@"before = %d  |  current = %d", _pageIndexBeforeRotation, _currentPageIndex);
     
-    return YES;
+    if(!shouldAutorotate) {
+        shouldAutorotate = YES;
+        return NO;
+    }
+    
+    return shouldAutorotate;
 }
 
 - (NSUInteger)supportedInterfaceOrientations
