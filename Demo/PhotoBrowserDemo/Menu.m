@@ -248,9 +248,7 @@
     browser.showProgress = showProgress;
     browser.showPlaceholderImage = showPlaceholderImage;
     [browser setInitialPageIndex:index];
-    if([browser respondsToSelector:@selector(setModalPresentationStyle:)]) {
-        browser.modalPresentationStyle = UIModalPresentationOverFullScreen;
-    }
+    browser.modalPresentationStyle = UIModalPresentationCustom;
     [self presentViewController:browser animated:YES completion:nil];
 }
 
