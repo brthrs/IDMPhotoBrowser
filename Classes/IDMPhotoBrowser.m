@@ -320,7 +320,8 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
             [UIView beginAnimations:nil context:NULL];
             [UIView setAnimationDuration:_animationDuration];
             [UIView setAnimationDelegate:self];
-            [scrollView setCenter:CGPointMake(finalX, finalY)];
+            _pagingScrollView.hidden = YES;
+            //[scrollView setCenter:CGPointMake(finalX, finalY)];
             //self.view.backgroundColor = [UIColor colorWithPatternImage:[self getImageFromView:backgroundImageView]];
             [_applicationRootViewController.view setTransform:CGAffineTransformIdentity];
             [_blurView setTransform:CGAffineTransformIdentity];
@@ -389,20 +390,17 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
     _blurView.contentMode = UIViewContentModeCenter;
     _blurView.image = [[self getPreparedImageFromView:_applicationRootViewController.view] applyBlurWithRadius:9 tintColor: [UIColor clearColor] saturationDeltaFactor:1.8 maskImage:nil];
     _blurView.alpha = 0;
-    //[_applicationWindow addSubview:_blurView];
-    [_applicationWindow insertSubview:_blurView aboveSubview:_applicationRootViewController.view];
-    
+    [self.view addSubview:_blurView];
     
     _backgroundView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, screenHeight, screenHeight)];
     _backgroundView.backgroundColor = [UIColor clearColor];
     _backgroundView.userInteractionEnabled = NO;
-    //[_applicationWindow addSubview:_backgroundView];
-    [_applicationWindow insertSubview:_backgroundView aboveSubview:_blurView];
+    [self.view addSubview:_backgroundView];
     
     UIView *fadeView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, screenWidth, screenHeight)];
     fadeView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:IDMPhotoBrowserBlackBackgroundAlpha];
     fadeView.alpha = 0.0f;
-    [_applicationWindow addSubview:fadeView];
+    [self.view addSubview:fadeView];
     
     UIImageView *resizableImageView = [[UIImageView alloc] initWithImage:_imageFromView];
     resizableImageView.frame = _resizableImageViewFrame;
@@ -410,7 +408,6 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
     resizableImageView.contentMode = UIViewContentModeScaleAspectFill;
     resizableImageView.backgroundColor = [UIColor colorWithWhite:(_useWhiteBackgroundColor) ? 1 : 0 alpha:1];
     [_applicationWindow addSubview:resizableImageView];
-    //_senderViewForAnimation.hidden = YES;
     
     if(self.roundnessValue > 0) {
         resizableImageView.layer.masksToBounds = YES;
