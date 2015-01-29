@@ -6,9 +6,8 @@ inhibit_all_warnings!
 
 target "PhotoBrowserDemo" do
 
-pod 'AFNetworking', '~> 2.2.4'
-pod 'DACircularProgress', '~> 2.2'
-
-pod 'DCIntrospect-ARC'
+pod 'AFNetworking'
+pod 'DACircularProgress'
+pod 'pop'
 
 end
